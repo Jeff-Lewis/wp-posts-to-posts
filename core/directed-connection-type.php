@@ -216,11 +216,14 @@ class P2P_Directed_Connection_Type {
 		) );
 
 		// Store additional default values
+        $new_meta = array_merge( $meta, $this->data );
 		foreach ( $this->fields as $key => $args ) {
 			// (array) null == array()
+            if( !isset( $new_meta[$key] ) ){
 			foreach ( (array) $this->get_default( $args, $p2p_id ) as $default_value ) {
 				p2p_add_meta( $p2p_id, $key, $default_value );
 			}
+            }
 		}
 
 		return $p2p_id;
