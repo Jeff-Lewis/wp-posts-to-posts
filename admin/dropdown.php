@@ -43,14 +43,28 @@ abstract class P2P_Dropdown {
 
 		$args = array();
 
-		$tmp = reset( $_GET['p2p'] );
+        // Modified to support more than one drop down. Still only filters on one dropdown but it used to only look at the first control.
+        $p2p_params = $_GET['p2p'];
+        foreach($p2p_params as $key=>$value ){
+            if( is_array( $value ) ){
+                $dropdown_value = current( $value );
+                if( !IsNullOrEmptyString( $dropdown_value ) ){
+                    $args['connected_type'] = $key;
+                    $args['connected_direction'] = key( $value );
+                    $args['connected_items'] = $dropdown_value;
+                }
+            }
+        }
 
-		$args['connected_type'] = key( $_GET['p2p'] );
+		//$tmp = reset( $_GET['p2p'] );
 
-		list( $args['connected_direction'], $args['connected_items'] ) = each( $tmp );
+		//$args['connected_type'] = key( $_GET['p2p'] );
 
-		if ( !$args['connected_items'] )
+		//list( $args['connected_direction'], $args['connected_items'] ) = each( $tmp );
+
+		if ( !isset( $args['connected_items'] ) ){
 			return array();
+        }
 
 		return $args;
 	}
